@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Complaint App With Geo-Location</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <!-- FILES FOR LOGIN PAGE -->
+  <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+  <link rel="stylesheet" type="text/css" href="css/util.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <!-- ICON PACK -->
+  <link rel="stylesheet" href="dist/jqm-icon-pack-fa-builder.css">
+  <link rel="stylesheet" href="dist/jqm-icon-pack-fa.css">
+  <!-- jQuery -->
+  <link rel="stylesheet" type="text/css" href="js/jquery.mobile-1.4.5.css">
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.mobile-1.4.5.js"></script>
+  <script src="cordova.js"></script>
+  <!-- MATERIAL DESIGN -->
+  <link rel="stylesheet" href="css/material.min.css">
+  <script src="js/material.min.js"></script>
+  <!-- jQuery UI -->
+  <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
+  <script src="jquery-ui/jquery-ui.js"></script>
+  <!-- FILES FOR LEAFLET MAP -->
+  <link rel="stylesheet" href="leaflet/leaflet.css" />
+  <script src="leaflet/leaflet.js"></script>
+  <!-- ROUTING LEAFLET -->
+  <link rel="stylesheet" href="leaflet-routing-machine/dist/leaflet.css" />
+  <link rel="stylesheet" href="leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  <script src="leaflet-routing-machine/dist/leaflet.js"></script>
+  <script src="leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+  <!-- CUSTOM JS -->
+  <script src="js/home.js"></script>
+  <!-- REGISTER FORM VALIDATION JS -->
+  <script type="text/javascript" src="js/validation.js"></script>
+  <!-- IMAGE RECOGNITION -->
+  <script src="https://unpkg.com/ml5@0.1.3/dist/ml5.min.js"></script>
+  <!-- RESIZE IMAGE -->
+  <script src="js/resizeimg.js"></script>
+  <style>
+    @font-face {
+      font-family: "AB";
+      src: url("fonts/Aliquam.ttf");
+    }
+
+    @font-face {
+      font-family: "AB1";
+      src: url("fonts/AliquamREG.ttf");
+    }
+
+    .showlarge {
+      font-size: 48px;
+      font-family: 'AB1';
+      text-shadow: none;
+    }
+
+    .title {
+      align-items: center;
+    }
+
+    .greet {
+      width: inherit;
+      margin-top: 80px;
+      margin-left: 10px;
+      margin-right: 10px;
+      background-color: #f12f12f12;
+
+    }
+
+    body {
+      background-color: #f12f12f12;
+    }
+
+    .former {
+      background-color: #f12f12f12;
+      background: #f12f12f12;
+    }
+
+    .center {
+      margin-left: 10px;
+      margin-right: 20px;
+    }
+
+    #login {
+      background-color: #f12f12f12;
+      background: #f12f12f12;
+    }
+
+    #mainpglogo {
+      width: 35%;
+      display: inline-block;
+      vertical-align: middle;
+      background: #f12f12f12;
+      background-color: #f12f12f12;
+    }
+
+    #smalllogo,
+    #smalllogo1 {
+      width: 11.5%;
+    }
+
+    .topcolor {
+      background-color: #f2f2f2;
+      text-align: left;
+      height: 50px;
+    }
+
+    .zoli {
+      background-color: green;
+    }
+
+    #zo {
+      background-color: #ff8080;
+      color: white;
+      font-weight: 300;
+    }
+
+    .navlogo {
+      width: 100%;
+      padding: 20px;
+    }
+
+    .alignname {
+      text-align: center;
+    }
+
+    #nowifi {
+      display: none;
+      width: inherit;
+      height: 650px;
+      position: absolute;
+      top: 350px;
+      text-align: center;
+    }
+
+    .wifisize {
+      width: 20%;
+      position: relative;
+    }
+
+    .wifi1 {
+      text-align: center;
+      position: relative;
+      margin-top: 3px;
+
+    }
+
+    h3 {
+      text-align: center;
+    }
+
+    #policeview,
+    #fireview,
+    #hospitalview,
+    #busview,
+    #atmview,
+    #municipalityview,
+    #bankview,
+    #postview,
+    #gasview {
+      position: relative;
+      display: none;
+      width: inherit;
+      height: 600px;
+    }
+
+    #camimg {
+      width: inherit;
+    }
+
+    #subreport {
+      background-color: #ff8080;
+      color: white;
+      font-weight: lighter;
+    }
+
+    #cancelreport {
+      background: linear-gradient(to bottom left, #ff6600 1%, #ffcc00 100%);
+      color: white;
+      font-weight: lighter;
+    }
+
+    #report {
+      display: none;
+    }
+
+    #thermo {
+      width: 8%;
+      position: relative;
+      top: 5px;
+    }
+
+    #temp {
+      font-style: "Times New Roman";
+      top: 20px;
+    }
+
+    #buttongroup {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      height: 126%;
+      z-index: 2;
+    }
+
+    #imgblock {
+      width: inherit;
+      height: 320px;
+    }
+
+    #imgspace {
+      width: 60%;
+    }
+
+    #aligntext {
+      align-items: left;
+      text-align: left;
+    }
+
+    /*Navbar ICONS*/
+    .botnav {
+      height: 40px;
+    }
+
+    .yolobot {
+      position: relative;
+      text-align: center;
+    }
+
+    .ui-grid-c {
+      position: relative;
+      padding-top: 10px;
+      left: 20px;
+    }
+
+    /*UI HOMEPAGE*/
+    .demo-card-square.mdl-card {
+      width: 180px;
+      height: 140px;
+    }
+
+    #K1.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/police.png') bottom right 15% no-repeat #BA68C8;
+    }
+
+    #K2.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/firefighter.png') bottom right 15% no-repeat #4DB6AC;
+    }
+
+    #K3.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/hospital.png') bottom right 15% no-repeat #EC407A;
+    }
+
+    #K4.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/bus-stop.png') bottom right 15% no-repeat #FFEE58;
+    }
+
+    #K5.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/atm.png') bottom right 15% no-repeat #5C6BC0;
+    }
+
+    #K6.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/city-hall.png') bottom right 15% no-repeat #9CCC65;
+    }
+
+    #K7.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/bank.png') bottom right 15% no-repeat #FF9800;
+    }
+
+    #K8.demo-card-square>.mdl-card__title {
+      color: #fff;
+      background:
+        url('img/gas.png') bottom right 15% no-repeat #673AB7;
+    }
+
+    #Kred.ui-grid-a,
+    #Kred1.ui-grid-a,
+    #Kred2.ui-grid-a {
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding-top: 22px;
+      padding-left: 20px;
+    }
+
+    .ui-block-a .Ke,
+    .ui-block-b .ke {
+      padding: 5px;
+    }
+
+    #reportid {
+      width: inherit;
+      height: 200px;
+    }
+
+    /*Loader for MAPS*/
+    #loader {
+      display: none;
+      position: absolute;
+      left: 60%;
+      top: 50%;
+      z-index: 1;
+      text-align: center;
+      width: 150px;
+      height: 150px;
+      margin: -75px 0 0 -75px;
+      border: 6px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 6px solid #3498db;
+      width: 40px;
+      height: 40px;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Add animation to "page content" */
+    .animate-bottom {
+      position: relative;
+      -webkit-animation-name: animatebottom;
+      -webkit-animation-duration: 1s;
+      animation-name: animatebottom;
+      animation-duration: 1s
+    }
+
+    @-webkit-keyframes animatebottom {
+      from {
+        bottom: -100px;
+        opacity: 0
+      }
+
+      to {
+        bottom: 0px;
+        opacity: 1
+      }
+    }
+
+    @keyframes animatebottom {
+      from {
+        bottom: -100px;
+        opacity: 0
+      }
+
+      to {
+        bottom: 0;
+        opacity: 1
+      }
+    }
+
+    #homemain {
+      text-align: center;
+    }
+
+    /*PROFILE*/
+    #proficontainer {
+      text-align: center;
+    }
+
+    #proficon {
+      width: 50%;
+    }
+
+
+
+    #profuser {
+      font-family: "AB";
+    }
+
+    #pushtoright {
+      width: 95%;
+    }
+
+    #proflogout {
+      float: right;
+    }
+
+    #profiletable {
+      width: 95%;
+    }
+
+    .line {
+      height: 1px;
+      width: 95%;
+      background-color: black;
+    }
+
+    .AB {
+      font-family: "AB";
+      font-weight: bold;
+      text-shadow: none;
+    }
+
+    #aa,
+    #bb,
+    #cc {
+      font-family: "AB1";
+      font-size: 20px;
+    }
+
+    #medium {
+      width: 80%;
+    }
+
+    #changemail,
+    #changepass {
+      width: 25%;
+      text-shadow: none;
+    }
+
+    .continput {
+      width: 95%;
+    }
+
+    /*Complaint Form*/
+    textarea {
+      font-size: 16px;
+      line-height: 1.4;
+      width: 100%;
+      height: auto;
+    }
+
+    #complaintsub {
+      width: 30%;
+      text-shadow: none;
+    }
+
+
+    .titletext {
+      font-family: 'AB1';
+    }
+
+    .inputtext {
+      font-family: 'AB1';
+      text-shadow: none;
+    }
+
+    #size {
+      display: none;
+      width: inherit;
+      height: 200px;
+    }
+
+    .center1 {
+      text-align: center;
+      width: 100%;
+    }
+
+    #reducesize {
+      width: 80%;
+    }
+
+    /**Sticks the footer to the bottom of the page */
+    [data-role=page] {
+      height: 100% !important;
+      position: relative !important;
+    }
+
+    [data-role=footer] {
+      bottom: 0;
+      position: fixed !important;
+      top: auto !important;
+      width: 100%;
+      z-index: 3;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- MAIN LOGIN PAGE -->
+  <div data-role="page" id="login">
+    <br>
+    <div class="greet">
+      <form class="former login100-form validate-form">
+        <span class="former login100-form-title p-b-26 title showlarge">
+          welcome
+        </span>
+        <span class=" former login100-form-title p-b-48">
+          <img id="mainpglogo" src="img/logo.png">
+        </span>
+        <div data-role="main" class="ui-content center">
+          <form method="" onSubmit="submitted">
+            <input id="01" name="un" type="text" placeholder="email" />
+            <input id="02" name="pw" type="password" placeholder="password" />
+            <a id="zo" class="ui-btn ui-corner-all">Submit</a>
+          </form>
+        </div>
+
+
+        <div class="text-center p-t-115">
+          <span class="txt1">
+            Don’t have an account?
+          </span>
+
+          <a class="txt2" href="#regpg" data-transition="slide">
+            Sign Up
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- HOMEPAGE -->
+  <div data-role="page" id="home" class="former">
+    <div data-role="main" class="ui-content" id="homemain">
+      <h3 id="temp"></h3>
+      <div id="nowifi"><img class="wifisize" src="img/nowifi.png">
+        <h3 class="wifi1">No internet connection</h3>
+      </div>
+      <!-- MAIN BUTTONS FOR MAPS -->
+      <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect" id="buttongroup">
+        <div class="mdl-tabs__tab-bar">
+          <a href="#hometab" class="mdl-tabs__tab is-active">what`s Nearby</a>
+        </div>
+        <div class="mdl-tabs__panel is-active">
+          <div id="Kred" class="ui-grid-a">
+            <div class="ui-block-a ke">
+              <!-- Square card -->
+              <div id="K1" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Police Station</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="police" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="ui-block-b ke">
+              <!-- Square card -->
+              <div id="K2" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Fire Station</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="fire" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" data-transition="pop">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="Kred1" class="ui-grid-a">
+            <div class="ui-block-a ke">
+              <!-- Square card -->
+              <div id="K3" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Hospital</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="hospital" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="ui-block-b ke">
+              <!-- Square card -->
+              <div id="K4" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Bus Stop</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="busstop" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="Kred2" class="ui-grid-a">
+            <div class="ui-block-a ke">
+              <!-- Square card -->
+              <div id="K5" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">ATM</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="atm" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="ui-block-b ke">
+              <!-- Square card -->
+              <div id="K6" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Municipality</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="muni" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="Kred2" class="ui-grid-a">
+            <div class="ui-block-a ke">
+              <!-- Square card -->
+              <div id="K7" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Bank</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="bank" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="ui-block-b ke">
+              <!-- Square card -->
+              <div id="K8" class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                  <h2 class="mdl-card__title-text">Filling Station</h2>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a id="gas" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    view
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- LEAFLET MAPS -->
+      <div id="loader"></div>
+      <div id="policeview"></div>
+      <div id="fireview"></div>
+      <div id="hospitalview"></div>
+      <div id="busview"></div>
+      <div id="atmview"></div>
+      <div id="municipalityview"></div>
+      <div id="bankview"></div>
+      <div id="postview"></div>
+      <div id="gasview"></div>
+    </div>
+    <!-- FOOTER NAV -->
+    <div data-role="footer">
+      <div data-role="navbar">
+        <ul>
+          <li><a id="home1" href="#home" data-icon="map-marker" class="botnav"></a></li>
+          <li><a data-icon="camera" class="botnav camera1"></a></li>
+          <li><a href="#profile" data-icon="user" class="botnav tappend"></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- CAMERA -->
+  <div data-role="page" id="camera">
+    <!-- CAMERA MAIN -->
+    <div data-role="main" id="cameramain" class="ui-content">
+      <div id="report">
+        <h3 class="center titletext">Complaint Form<h3>
+            <div id="imgblock">
+              <img id="imgspace" src="" crossorigin="anonymous">
+            </div>
+            <div id="aligntext">
+              <label for="curuser" class="inputtext">User:</label>
+              <input id="curuser" disabled data-mini="true">
+              <label for="curlocation" class="inputtext">Location: </label>
+              <input id="curlocation" data-mini="true" disabled>
+              <div id="reportid"></div>
+              <br>
+              <fieldset data-role="collapsible" id="problemtype" data-expanded-icon="carat-u" data-collapsed-icon="carat-d" data-iconpos="right">
+                <legend class="inputtext">Choose Problem </legend>
+                <div data-role="controlgroup" id="problem" required>
+                  <label><input name="chose" type="radio" value="Electricitcal">Electrical</label>
+                  <label><input name="chose" type="radio" value="Water">Water</label>
+                  <label><input name="chose" type="radio" value="Obstruction">Obstruction</label>
+                  <label><input name="chose" type="radio" value="Road">Road</label>
+                  <label><input name="chose" type="radio" value="Environmental">Environmental</label>
+                </div>
+              </fieldset>
+              <br>
+              <label for="combox" class="inputtext">Details:</label>
+              <textarea id="combox" type="textarea" rows="10" onclick="loadImageFile();" required></textarea>
+              <button id="complaintsub" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored tappend">Submit</button>
+              <div id="size"></div>
+            </div>
+      </div>
+      <div id="camimg"></div>
+
+    </div>
+    <!-- CAMERA footer -->
+    <div data-role="footer">
+      <div data-role="navbar" class="yolobot">
+        <ul>
+          <li><a id="home1" href="#home" data-icon="home" class=" botnav"></a></li>
+          <li><a href="#camera" data-icon="camera" class="botnav"></a></li>
+          <li><a href="#profile" data-icon="user" class="botnav"></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- MAIN REGISTER PAGE -->
+  <div id="regpg" data-role="page">
+    <!-- HOMEPAGE header for the page -->
+    <div data-role="header" class="topcolor">
+      <img id="smalllogo" src="img/logo.png" class="ui-btn-left" />
+      <h3>Mauritius Services</h3>
+    </div>
+    <br>
+    <!-- MAIN REGISTER PAGE -->
+    <div data-role="main" class="ui-content">
+      <form id="registration_form">
+        <input name="myname" type="text" placeholder="Name" id="fname" required />
+        <span class="er_form" id="fname_er"></span>
+        <input name="surname" type="text" placeholder="Surname" id="sname" required />
+        <span class="er_form" id="sname_er"></span>
+        <input name="national" type="text" placeholder="K234689001245C" id="nic" required />
+        <span class="er_form" id="nic_er"></span>
+        <input name="address" type="text" placeholder="Forbach Rd, Cottage" id="add" required />
+        <span class="er_form" id="add_er"></span>
+        <fieldset data-role="collapsible" id="choose" data-expanded-icon="carat-u" data-collapsed-icon="carat-d" data-iconpos="right">
+          <legend>Choose District </legend>
+          <div data-role="controlgroup" id="dist">
+            <label><input name="chose" type="radio" value="rdr" required>Riviere Du Rempart</label>
+            <label><input name="chose" type="radio" value="pamp">Pamplemousses</label>
+            <label><input name="chose" type="radio" value="p-l">Port-Louis</label>
+            <label><input name="chose" type="radio" value="moka">Moka</label>
+            <label><input name="chose" type="radio" value="flacq">Flacq</label>
+            <label><input name="chose" type="radio" value="r-n">Riviere-Noire</label>
+            <label><input name="chose" type="radio" value="p-w">Plaines-Wilhems</label>
+            <label><input name="chose" type="radio" value="grand-port">Grand-Port</label>
+            <label><input name="chose" type="radio" value="savanne">Savanne</label>
+          </div>
+        </fieldset>
+        <span class="er_form" id="dist_er"></span>
+        <input name="eml" type="email" placeholder="user@mail.com" id="email" required />
+        <span class="er_form" id="email_er"></span>
+        <input name="pw" type="password" placeholder="password" id="pass" maxlength="8" required />
+        <span class="er_form" id="pass_er"></span>
+        <input name="cPw" type="password" placeholder="confirm password" id="cpass" maxlength="8" required />
+        <span class="er_form" id="cpass_er"></span>
+        <br>
+        <button id="regsub" data-icon="arrow-r" class="ui-icon-right">Submit</button>
+      </form>
+      <br>
+    </div>
+  </div>
+  <!-- PROFILE -->
+  <div data-role="page" id="profile">
+    <!-- Profile MAIN -->
+    <div id="profilemain" data-role="main" class="ui-content">
+      <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect" id="buttongroup">
+        <div class="mdl-tabs__tab-bar">
+          <a href="#logbook" class="mdl-tabs__tab is-active">Log</a>
+          <a href="#profmod" class="mdl-tabs__tab">Modify</a>
+        </div>
+        <div id="logbook" class="mdl-tabs__panel is-active">
+          <!-- <img id="img1" src=""> -->
+          <div id="pushtoright">
+            <a id="proflogout" class="ui-btn ui-shadow ui-corner-all ui-icon-sign-out ui-btn-icon-notext ui-btn-a"></a>
+          </div>
+          <div id="proficontainer">
+            <br>
+            <img id="proficon" src="img/user.png">
+            <br>
+            <h2 id="profuser">Name Here</h2>
+            <br>
+            <div class="line"></div>
+
+            <h2 class="AB">Report Log</h2>
+            <div id="profiletable">
+              <ul id="adding" data-role="listview" data-inset="true">
+
+              </ul>
+            </div>
+            <!-- pop up dialog what should be able to be dismissed -->
+            <div data-role="popup" id="popupDialog" data-dismissible="false" style="max-width:2000px;">
+              <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left">close</a>
+              <div data-role="header" data-theme="a">
+                <h1>Report</h1>
+              </div>
+              <div role="main" class="ui-content">
+                <div class="center1">
+                  <img id="reducesize" src="img/f2.jpg">
+                </div>
+                <br>
+                <div>
+                  <img src="img/medal.png">&nbsp;&nbsp;<span id="ptitle">Electrical</span>
+                  <br><br>
+                  <img src="img/pin.png">&nbsp;&nbsp;<span id="ploc">Piton State College</span>
+                  <br><br>
+                  <img src="img/calendar.png">&nbsp;&nbsp;<span id="pdate">20/09/2019</span>
+                  <br><br>
+                  <img src="img/cloud.png">&nbsp;&nbsp;<span id="pstat"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="profmod" class="mdl-tabs__panel">
+          <div class="container-square">
+            <br>
+            <div class="continput">
+              <label id="aa">Change Email:</label>
+              <input id="profmail" type="email" placeholder="Email">
+              <input id="confprofmail" type="text" placeholder="Confirm Email">
+              <button id="changemail" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                Submit
+              </button>
+            </div>
+            <br><br>
+            <div class="continput">
+              <label id="bb">Change Password:</label>
+              <input id="profpassword" type="password" placeholder="password">
+              <input id="confprofpassword" type="password" placeholder="Confirm password">
+              <button id="changepass" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                Submit
+              </button>
+            </div>
+            <br><br>
+            <!--
+            <div>
+              <span id="cc">Change District</span>
+              <br>
+              <fieldset data-role="collapsible" id="chn" data-expanded-icon="carat-u" data-collapsed-icon="carat-d" data-iconpos="right">
+                <legend>Choose District </legend>
+                <div data-role="controlgroup" id="changeproblem">
+                  <label><input name="chose" type="radio" value="rdr" required>Riviere Du Rempart</label>
+                  <label><input name="chose" type="radio" value="pamp">Pamplemousses</label>
+                  <label><input name="chose" type="radio" value="p-l">Port-Louis</label>
+                  <label><input name="chose" type="radio" value="moka">Moka</label>
+                  <label><input name="chose" type="radio" value="flacq">Flacq</label>
+                  <label><input name="chose" type="radio" value="r-n">Riviere-Noire</label>
+                  <label><input name="chose" type="radio" value="p-w">Plaines-Wilhems</label>
+                  <label><input name="chose" type="radio" value="grand-port">Grand-Port</label>
+                  <label><input name="chose" type="radio" value="savanne">Savanne</label>
+                </div>
+              </fieldset>
+              <button id="changedist" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                Confirm
+              </button>
+            </div>
+          -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FOOTER NAV -->
+    <div data-role="footer">
+      <div data-role="navbar">
+        <ul>
+          <li><a id="home1" href="#home" data-icon="map-marker" class="botnav"></a></li>
+          <li><a data-icon="camera" class="botnav camera1"></a></li>
+          <li><a href="#profile" data-icon="user" class="botnav"></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Secrect section -->
+  <div data-role="page" id="secrect">
+    <div data-role="main" class="ui-content">
+      <img id="original-Img" />
+      <img id="upload-Preview" />
+    </div>
+  </div>
+  <script>
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+      //creates the database and size
+      db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+      //ALLOWS execution of all functions
+      db.transaction(function(tx) {
+        //CREATE TABLE USER
+        //tx.executeSql('DROP TABLE image');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS user(name text,surname text, nic text, district text, password text, address text, email text)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS image(img text,prob text, date text, status text, keyword text, loc text, userid int)');
+
+      });
+
+      //MAINTAIN USER SESSION
+      $("#profile").on("pageshow", function(event) {
+        usersession();
+      });
+      $("#home").on("pageshow", function(event) {
+        usersession();
+      })
+
+      //Prevent keyboard from overalpping
+      $("#combox").focusin(function() {
+        $("#size").show();
+      });
+
+      $("#combox").focusout(function() {
+        $("#size").hide();
+      })
+
+      //REGISTER LOGIC
+      $("#regsub").tap(function(e) {
+        e.preventDefault();
+        pushtotable();
+      });
+
+      function pushtotable() {
+        //creates the database and size
+        db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+        db.transaction(function(tx) {
+          var a = $("#fname").val();
+          var b = $("#sname").val();
+          var c = $("#nic").val();
+          var d = $("#add").val();
+          var e = $("#dist input[type='radio']:checked").val();
+          var f = $("#email").val();
+          var g = $("#cpass").val();
+          tx.executeSql('INSERT INTO user(name,surname,nic,district,password,address,email) VALUES (?,?,?,?,?,?,?)', [a, b, c, e, g, d, f]);
+        });
+
+        $.mobile.changePage("#login", {
+          reverse: false,
+          transition: "pop"
+        });
+      }
+
+      //LOGIN LOGIC
+      $("#zo").tap(function() {
+        checklogin();
+      });
+
+      function checklogin() {
+        var username, password;
+        var counter = 0;
+        db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+        db.transaction(function(tx) {
+          tx.executeSql('SELECT * FROM user', [], function(tx, result) {
+            //console.log(result.rows.length);
+            for (let i = 0; i < result.rows.length; i++) {
+              username = result.rows[i].email;
+              password = result.rows[i].password;
+              var a = $("#01").val();
+              var b = $("#02").val();
+              if ((a == username) && (b == password)) {
+                counter++;
+                //allow app to track user through app
+                localStorage.setItem('ids', (i + 1));
+                //using localStorage instead of opening db every time
+                let name = result.rows[i].name + " " + result.rows[i].surname;
+                localStorage.setItem('usn', name);
+                //Add name to profile
+                $("#profuser").html(name);
+              }
+            }
+            //allow login or not
+            if (counter > 0) {
+              $.mobile.changePage("#home", {
+                reverse: false,
+                transition: "pop"
+              });
+            } else {
+              alert("INVALID");
+            }
+            counter = 0;
+          })
+        });
+      }
+
+      //LOG OUT
+      $("#proflogout").tap(function() {
+        localStorage.removeItem('usn');
+        $("#01").val("");
+        $("02").val("");
+        $.mobile.changePage("#login", {
+          reverse: false,
+          transition: "pop"
+        });
+      });
+
+      //Append TABLE
+      $(".tappend").click(function() {
+        var ids = localStorage.getItem('ids');
+        db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+        db.transaction(function(tx) {
+          tx.executeSql('SELECT * FROM image WHERE userid=1', [], function(tx, result) {
+            var contentimg = [];
+            var contenttitle = [];
+            let a = result.rows.length;
+            for (let i = 0; i < a; i++) {
+              contentimg[i] = result.rows[i].img;
+              contenttitle[i] = result.rows[i].prob;
+            }
+            $("#adding").empty();
+            for (let x = 0; x < contentimg.length; x++) {
+              //alert("Image: " + contentimg[x] + "  keyword:" + contenttitle[x]);
+              $("#adding").append('<li alt="' + contentimg[x] +
+                '"><a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow"><img class="ui-li-icon ui-corner-none" src="img/report.png">' + contenttitle[x] +
+                '<a/></li>');
+
+              $("#adding").listview('refresh');
+            }
+          })
+        });
+      });
+
+      //USED TO KNOW WHICH LI IS CLICKED AND DISPLAY CORRECT INFO
+      $(document).on("tap", "#adding li", function() {
+        var a = $(this).attr('alt');
+        alert(a);
+        lombo(a);
+      });
+
+      async function lombo(a) {
+        db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+        db.transaction(function(tx) {
+          tx.executeSql('SELECT * FROM image WHERE img="' + a + '"', [], function(tx, result) {
+            $("#ptitle").html(result.rows[0].keyword);
+            $("#ploc").html(result.rows[0].loc);
+            $("#pdate").html(result.rows[0].date);
+            $("#pstat").html(result.rows[0].status);
+            $("#reducesize").attr('src', result.rows[0].img);
+          });
+        })
+      }
+
+      //IMAGE RECOGNITION
+      var res;
+      var allowed = 0;
+      var loc = localStorage.getItem('location');
+
+      // Initialize the Image Classifier method with MobileNet
+      const classifier = ml5.imageClassifier('MobileNet', modelLoaded);
+      // When the model is loaded
+      function modelLoaded() {
+        alert('Model Loaded!');
+      }
+      async function compareimg() {
+        //await changeimg();
+        // Make a prediction with a selected image
+        classifier.predict(document.getElementById('upload-Preview'), function(err, results) {
+          console.log(results);
+          console.log(err);
+          res = results[0].className;
+          console.log(res);
+          alert(res);
+          decider(res);
+          sendornot();
+          $.mobile.changePage("#home", {
+            reverse: false,
+            transition: "pop"
+          });
+        });
+      }
+
+      $("#complaintsub").tap(function() {
+        compareimg();
+        //reinitialise to 0
+        allowed = 0;
+      });
+
+      function decider(x) {
+        if (x.includes('Laptop') || x.includes('laptop')) {
+          allowed++;
+        } else if (x.includes('pc') || x.includes('Pc')) {
+          allowed++;
+        } else if (x.includes('dog') || x.includes('Dog')) {
+          allowed++;
+        } else if (x.includes('sea') || x.includes('Sea')) {
+          allowed++;
+        } else if (x.includes('Food') || x.includes('food')) {
+          allowed++;
+        } else if (x.includes('animal') || x.includes('Animal')) {
+          allowed++;
+        } else if (x.includes('phone') || x.includes('Phone')) {
+          allowed++;
+        } else if (x.includes('boy') || x.includes('girl')) {
+          allowed++;
+        } else if (x.includes('Boy') || x.includes('Girl')) {
+          allowed++;
+        }
+      }
+
+      function sendornot() {
+        var tellme;
+        if (allowed > 0) {
+          alert('NOT ALLOWED');
+          tellme = "Rejected"
+        } else {
+          alert('ALLOWED');
+          tellme = "Approved"
+        }
+        var gettext = $("#problem input[type=radio]:checked").val();
+        alert(gettext);
+        var locate = localStorage.getItem('addrloc');
+        var imgloc = localStorage.getItem('location');
+        db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+        db.transaction(function(tx) {
+          tx.executeSql('UPDATE image SET status=?,prob=?,keyword=?,loc=? WHERE img="' + imgloc + '"', [tellme, gettext, res, locate]);
+        })
+      }
+
+      //==============================MODIFY CREDENTIALS========================================//
+      $("#changemail").tap(function() {
+        var idz = localStorage.getItem('ids');
+        let a = $("#profmail").val();
+        let b = $("#confprofmail").val();
+        if ((a == "") || (b == "")) {
+          alert("Invalid");
+        } else {
+          db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+          db.transaction(function(tx) {
+            tx.executeSql('UPDATE user SET email=? WHERE rowid=' + idz, [a]);
+          })
+          $.mobile.changePage("#home", {
+            reverse: false,
+            transition: "pop"
+          });
+          $("#profmail").val("");
+          $("#confprofmail").val("");
+
+        }
+      })
+
+      $("#changepass").tap(function() {
+        var idz = localStorage.getItem('ids');
+        let a = $("#profpassword").val();
+        let b = $("#confprofpassword").val();
+        if ((a == "") || (b == "")) {
+          alert("Invalid")
+        } else {
+          db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+          db.transaction(function(tx) {
+            tx.executeSql('UPDATE user SET password=? WHERE rowid=' + idz, [a]);
+          })
+          $.mobile.changePage("#home", {
+            reverse: false,
+            transition: "pop"
+          });
+          $("#profpassword").val("");
+          $("#confprofpassword").val("");
+        }
+      })
+      /*
+      $("#changedist").tap(function() {
+        let a = $("#changeproblem input[type='radio']:checked").val();
+        if (a == null) {
+          alert('invalid');
+        } else {
+          db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+          db.transaction(function(tx) {
+            tx.executeSql('UPDATE user SET district=? WHERE rowid=' + idz, [a]);
+          })
+          $.mobile.changePage("#home", {
+            reverse: false,
+            transition: "pop"
+          });
+        }
+      })
+      */
+    }
+
+    //Check Session
+    function usersession() {
+      var a = localStorage.getItem('usn');
+      if (a == null) {
+        $.mobile.changePage("#login", {
+          reverse: false,
+          transition: "pop"
+        });
+      }
+    }
+
+    //LOCK Orientation
+    window.screen.orientation.lock('portrait');
+    //Changing status bar topcolor
+    $(document).ready(function() {
+      if (cordova.platformId == 'android') {
+        StatusBar.hide();
+      }
+    });
+    //CHECK INTERNET CONNECTION
+    function onOffline() {
+      var networkState = navigator.connection.type;
+      if (networkState == "none") {
+        $("#nowifi").show("fast");
+        $("#buttongroup").hide("fast");
+        $("#titl").hide("fast");
+
+      } else if ($("#policeview" || "#postview" || "#fireview" || "#hospitalview" || "#busview" || "#atmview" || "#municipalityview" || "#bankview" || "#gasview").is(":visible")) {
+        alert("yaaaay");
+      } else {
+        $("#nowifi").hide("fast");
+        $("#buttongroup").show("fast");
+        $("#titl").show("fast");
+      }
+    }
+    window.setInterval(function() {
+      /// call your function here
+      var networkState = navigator.connection.type;
+      if (networkState == "none") {
+        $("#nowifi").show("fast");
+        $("#buttongroup").hide("fast");
+        $("#titl").hide("fast");
+      } else if ($("#policeview").is(":visible") || $("#fireview").is(":visible") || $("#hospitalview").is(":visible") || $("#busview").is(":visible") || $("#atmview").is(":visible") || $("#municipalityview").is(":visible") || $("#bankview").is(
+          ":visible") || $("#gasview").is(":visible")) {
+        //do nothing
+      } else {
+        $("#nowifi").hide("fast");
+        $("#buttongroup").show("fast");
+        $("#titl").show("fast");
+      }
+
+    }, 800);
+    //SWIPES
+    $("#home").on("swipeleft", homemoveleft);
+    //$("#camera").on("swiperight", cameramoveright);
+
+    function homemoveleft() {
+      if ($("#buttongroup").is(":visible")) {
+        $.mobile.changePage("#camera", {
+          reverse: false,
+          transition: "slide"
+        });
+        clickpic();
+        reportmap();
+        filltext();
+      }
+    }
+
+    function cameramoveright() {
+      $.mobile.changePage("#home", {
+        reverse: false,
+        transition: "slide"
+      });
+    }
+
+    var imageloc;
+    //CAMERA FUNCTIONALITY
+    $(document).ready(function() {
+      $(".camera1").tap(function() {
+        $.mobile.changePage("#camera", {
+          reverse: false,
+          transition: "pop"
+        });
+        clickpic();
+        filltext();
+        reportmap();
+      });
+
+    });
+
+    //CLICK PICTURE
+    function clickpic() {
+      navigator.camera.getPicture(camsuccess, camerror, {
+        quality: 50,
+        destinationType: Camera.DestinationType.DATA_URI
+      });
+    }
+
+    function justdoit() {}
+
+    function camsuccess(imageURI) {
+      var img = $("#camimg");
+      img.src = imageURI;
+      imageloc = imageURI;
+      localStorage.setItem('location', imageloc);
+      //imageloc location provides the absolute path to the image in memory
+      $("#imgspace").attr('src', imageloc);
+      $("#report").show("fast");
+      //creates the database and size
+      db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+      db.transaction(function(tx) {
+        //PUSHING IMAGE DETAILS AND VALUES
+        today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //As January is 0.
+        var yyyy = today.getFullYear();
+        var dt = dd + "/" + mm + "/" + yyyy; //date
+        var e = $("#problem input[type='radio']:checked").val(); //problem
+        var userid = localStorage.getItem('ids');
+        tx.executeSql('INSERT INTO image(img,prob,date,status,keyword,loc,userid) VALUES (?,?,?,?,?,?,?)', [imageloc, e, dt, "pending", "none", "undefined", userid]);
+      })
+      $("#original-Img").attr('src', imageloc);
+
+    }
+
+    function camerror(err) {
+      $.mobile.changePage("#home", {
+        reverse: false,
+        transition: "pop"
+      });
+    }
+
+    var addrloc;
+
+    function filltext() {
+      $.ajax({
+        url: 'https://weather.cit.api.here.com/weather/1.0/report.json',
+        type: 'GET',
+        dataType: 'jsonp',
+        jsonp: 'jsonpcallback',
+        data: {
+          product: 'observation',
+          latitude: localStorage.getItem('lat'),
+          longitude: localStorage.getItem('longitude'),
+          oneobservation: 'true',
+          app_id: '6HK4rI7nJG7U70E3sSlb',
+          app_code: 'ojkRjUzTEJR5VLyGobiRIQ'
+        },
+        success: function(data) {
+          $("#curlocation").val(data.observations.location[0].city);
+          addrloc = data.observations.location[0].city;
+          localStorage.setItem('addrloc', addrloc);
+        }
+      });
+      $('#curuser').val(localStorage.getItem('usn'));
+    }
+
+    //MAP INSIDE THE COMPLAINT FORM
+    function reportmap() {
+      var lat = localStorage.getItem('lat');
+      var longitude = localStorage.getItem('longitude');
+      var mymap = L.map('reportid').setView([lat, longitude], 17);
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        maxZoom: 19,
+        attribution: 'Map data &copy;' +
+          '<a href="https://www.openstreetmap.org/">OpenStreetMap</a>' +
+          'contributors,<a href="https://creativecommons.org/licenses' +
+          '/by-sa/2.0/">CC-BY-SA</a>,Imagery © <a href="https://' +
+          'www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox.satellite',
+        accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYyc' +
+          'XBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
+      }).addTo(mymap);
+
+      var marker = L.marker([lat, longitude]).addTo(mymap);
+      marker.bindPopup("<b>Report Location<b>").openPopup();
+    }
+    //Shows loader
+    window.setInterval(function() {
+      if ($("#buttongroup").is(":visible")) {
+        $("#loader").hide("fast");
+      } else if ($("#nowifi").is(":visible")) {
+        $("#loader").hide("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#policeview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#fireview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#hospitalview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#busview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#atmview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#municipalityview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#bankview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else if ($("#buttongroup").is(":hidden") && $("#gasview").is(":hidden")) {
+        $("#loader").show("fast");
+      } else {
+        $("#loader").hide("fast");
+      }
+    }, 800);
+    //ON LEAVING MAPS
+    $("#home").on("pagebeforehide", function() {
+      $("#policeview").hide();
+      $("#fireview").hide();
+      $("#hospitalview").hide();
+      $("#busview").hide();
+      $("#atmview").hide();
+      $("#municipalityview").hide();
+      $("#bankview").hide();
+      $("#gasview").hide();
+      $("#temp").hide();
+      $("#buttongroup").show();
+    });
+  </script>
+</body>
+
+</html>
