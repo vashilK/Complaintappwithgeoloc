@@ -1167,7 +1167,8 @@
         let lat = localStorage.getItem('lat');
         let lon = localStorage.getItem('longitude');
         let problem = $("#combox").val();
-        let img = localStorage.getItem('imageloc');
+        let img = $("#imgspace").attr('src');
+        alert(img);
         let idz = localStorage.getItem('ids');
         let gettext = $("#problem input[type=radio]:checked").val();;
         let probtitle = 'Complaint about ' + gettext + ' issue'
