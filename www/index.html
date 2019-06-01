@@ -34,7 +34,7 @@
   <!-- CUSTOM JS -->
   <script src="js/home.js"></script>
   <!-- REGISTER FORM VALIDATION JS -->
-  <script type="text/javascript" src="js/validation.js"></script>
+
   <!-- IMAGE RECOGNITION -->
   <script src="https://unpkg.com/ml5@0.1.3/dist/ml5.min.js"></script>
   <!-- RESIZE IMAGE -->
@@ -103,7 +103,7 @@
 
     .topcolor {
       background-color: #f2f2f2;
-      text-align: left;
+      text-align: center;
       height: 50px;
     }
 
@@ -484,6 +484,16 @@
       width: 80%;
     }
 
+    .regtitle {
+      position: relative;
+      text-align: center;
+      align-self: center;
+      top: 15px;
+      font-size: 24px;
+      font-family: 'AB';
+      text-shadow: none;
+    }
+
     /**Sticks the footer to the bottom of the page */
     [data-role=page] {
       height: 100% !important;
@@ -513,8 +523,8 @@
           <img id="mainpglogo" src="img/logo.png">
         </span>
         <div data-role="main" class="ui-content center">
-          <form method="" onSubmit="submitted">
-            <input id="01" name="un" type="text" placeholder="email" />
+          <form onsubmit="event.preventDefault();">
+            <input id="01" name="un" type="email" placeholder="email" />
             <input id="02" name="pw" type="password" placeholder="password" />
             <a id="zo" class="ui-btn ui-corner-all">Submit</a>
           </form>
@@ -713,6 +723,7 @@
               <label for="combox" class="inputtext">Details:</label>
               <textarea id="combox" type="textarea" rows="10" onclick="loadImageFile();" required></textarea>
               <button id="complaintsub" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored tappend">Submit</button>
+              <br><br><br>
               <div id="size"></div>
             </div>
       </div>
@@ -731,11 +742,11 @@
     </div>
   </div>
   <!-- MAIN REGISTER PAGE -->
-  <div id="regpg" data-role="page">
+  <div data-role="page" id="regpg">
     <!-- HOMEPAGE header for the page -->
     <div data-role="header" class="topcolor">
       <img id="smalllogo" src="img/logo.png" class="ui-btn-left" />
-      <h3>Mauritius Services</h3>
+      <span class="regtitle">Registration Form</span>
     </div>
     <br>
     <!-- MAIN REGISTER PAGE -->
@@ -766,9 +777,9 @@
         <span class="er_form" id="dist_er"></span>
         <input name="eml" type="email" placeholder="user@mail.com" id="email" required />
         <span class="er_form" id="email_er"></span>
-        <input name="pw" type="password" placeholder="password" id="pass" maxlength="8" required />
+        <input name="pw" type="password" placeholder="password" id="pass" maxlength="30" required />
         <span class="er_form" id="pass_er"></span>
-        <input name="cPw" type="password" placeholder="confirm password" id="cpass" maxlength="8" required />
+        <input name="cPw" type="password" placeholder="confirm password" id="cpass" maxlength="30" required />
         <span class="er_form" id="cpass_er"></span>
         <br>
         <button id="regsub" data-icon="arrow-r" class="ui-icon-right">Submit</button>
@@ -831,23 +842,27 @@
         <div id="profmod" class="mdl-tabs__panel">
           <div class="container-square">
             <br>
-            <div class="continput">
-              <label id="aa">Change Email:</label>
-              <input id="profmail" type="email" placeholder="Email">
-              <input id="confprofmail" type="text" placeholder="Confirm Email">
-              <button id="changemail" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                Submit
-              </button>
-            </div>
+            <form onsubmit="event.preventDefault();">
+              <div class="continput">
+                <label id="aa">Change Email:</label>
+                <input id="profmail" type="email" placeholder="Email">
+                <input id="confprofmail" type="email" placeholder="Confirm Email">
+                <button id="changemail" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                  Submit
+                </button>
+              </div>
+            </form>
             <br><br>
-            <div class="continput">
-              <label id="bb">Change Password:</label>
-              <input id="profpassword" type="password" placeholder="password">
-              <input id="confprofpassword" type="password" placeholder="Confirm password">
-              <button id="changepass" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                Submit
-              </button>
-            </div>
+            <form onsubmit="event.preventDefault();">
+              <div class="continput">
+                <label id="bb">Change Password:</label>
+                <input id="profpassword" type="password" placeholder="password">
+                <input id="confprofpassword" type="password" placeholder="Confirm password">
+                <button id="changepass" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                  Submit
+                </button>
+              </div>
+            </form>
             <br><br>
             <!--
             <div>
@@ -906,7 +921,6 @@
         //tx.executeSql('DROP TABLE image');
         tx.executeSql('CREATE TABLE IF NOT EXISTS user(name text,surname text, nic text, district text, password text, address text, email text)');
         tx.executeSql('CREATE TABLE IF NOT EXISTS image(img text,prob text, date text, status text, keyword text, loc text, userid int)');
-
       });
 
       //MAINTAIN USER SESSION
@@ -929,10 +943,17 @@
       //REGISTER LOGIC
       $("#regsub").tap(function(e) {
         e.preventDefault();
-        pushtotable();
+
+        if ((err_fname == false) && (err_sname == false) && (err_nic == false) && (err_addr == false) && (err_dist == false) && (err_email == false) && (err_pass == false) && (err_cpass == false)) {
+          checkcredentials();
+        } else {
+          alert("Invalid");
+        }
       });
 
-      function pushtotable() {
+      //CHECKING WHETHER CREDENTIALS ALREADY EXIST
+      function checkcredentials() {
+        var keeptrack = 0;
         //creates the database and size
         db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
         db.transaction(function(tx) {
@@ -943,12 +964,26 @@
           var e = $("#dist input[type='radio']:checked").val();
           var f = $("#email").val();
           var g = $("#cpass").val();
-          tx.executeSql('INSERT INTO user(name,surname,nic,district,password,address,email) VALUES (?,?,?,?,?,?,?)', [a, b, c, e, g, d, f]);
-        });
-
-        $.mobile.changePage("#login", {
-          reverse: false,
-          transition: "pop"
+          tx.executeSql('SELECT * FROM user WHERE email="' + f + '"', [], function(tx, result) {
+            console.log(result.rows);
+            if (result.rows.length != 0) {
+              alert("The email is already in use!");
+              keeptrack = 0;
+            } else {
+              keeptrack++;
+            }
+          })
+          tx.executeSql('SELECT * FROM user WHERE nic="' + c + '"', [], function(tx, result) {
+            console.log(result.rows);
+            if (result.rows.length != 0) {
+              alert("The NIC is already in use!");
+              keeptrack = 0;
+            } else {
+              keeptrack++;
+            }
+            pushtotable(keeptrack);
+            keeptrack = 0;
+          })
         });
       }
 
@@ -1116,9 +1151,10 @@
         } else {
           alert('ALLOWED');
           tellme = "Approved"
+          sendmail();
         }
         var gettext = $("#problem input[type=radio]:checked").val();
-        alert(gettext);
+
         var locate = localStorage.getItem('addrloc');
         var imgloc = localStorage.getItem('location');
         db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
@@ -1127,14 +1163,42 @@
         })
       }
 
+      function sendmail() {
+        let lat = localStorage.getItem('lat');
+        let lon = localStorage.getItem('longitude');
+        let problem = $("#combox").val();
+        let img = localStorage.getItem('imageloc');
+        let idz = localStorage.getItem('ids');
+        let gettext = $("#problem input[type=radio]:checked").val();;
+        let probtitle = 'Complaint about ' + gettext + ' issue'
+        var mailadd;
+        //North Box
+        if ((lat <= -19.982676) && (lat >= -20.1583008)) {
+          mailadd = "kissoonvashil@gmail.com";
+          //Middle Box
+        } else if ((lat <= -20.158309) && (lat >= -20.363229)) {
+          mailadd = "dooshyantram@gmail.com";
+          //South Box
+        } else if ((lat <= -20.363229) && (lat >= -20.518343)) {
+          mailadd = "vashilnakey@gmail.com";
+        }
+        cordova.plugins.email.open({
+          app: 'gmail',
+          to: mailadd,
+          subject: probtitle,
+          body: problem,
+          attachments: img
+        });
+      }
       //==============================MODIFY CREDENTIALS========================================//
       $("#changemail").tap(function() {
         var idz = localStorage.getItem('ids');
         let a = $("#profmail").val();
         let b = $("#confprofmail").val();
+        var pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         if ((a == "") || (b == "")) {
-          alert("Invalid");
-        } else {
+          alert("Type in the mail first");
+        } else if (pattern.test(a)) {
           db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
           db.transaction(function(tx) {
             tx.executeSql('UPDATE user SET email=? WHERE rowid=' + idz, [a]);
@@ -1145,7 +1209,8 @@
           });
           $("#profmail").val("");
           $("#confprofmail").val("");
-
+        } else{
+          alert("Invalid");
         }
       })
 
@@ -1168,23 +1233,270 @@
           $("#confprofpassword").val("");
         }
       })
-      /*
-      $("#changedist").tap(function() {
-        let a = $("#changeproblem input[type='radio']:checked").val();
-        if (a == null) {
-          alert('invalid');
+
+      //============================== REGISTER VALIDATION ==============================================//
+
+      $("#fname_er").hide();
+      $("#sname_er").hide();
+      $("#nic_er").hide();
+      $("#addr_er").hide();
+      $("#dist_er").hide();
+      $("#email_er").hide();
+      $("#pass_er").hide();
+      $("#cpass_er").hide();
+
+
+
+      var err_fname = false;
+      var err_sname = false;
+      var err_nic = false;
+      var err_addr = false;
+      var err_dist = false;
+      var err_email = false;
+      var err_pass = false;
+      var err_cpass = false;
+
+
+      $("#fname").focusout(function() {
+        check_fname();
+      });
+
+      $("#sname").focusout(function() {
+        check_sname();
+      });
+
+      $("#email").focusout(function() {
+        check_email();
+      });
+      $("#nic").focusout(function() {
+        check_nic();
+      });
+
+      $("#add").focusout(function() {
+        check_addr();
+      });
+
+      $("#choose").focusout(function() {
+        check_dist();
+      });
+      $("#pass").focusout(function() {
+        check_pass();
+      });
+
+      $("#cpass").focusout(function() {
+        check_cpass();
+      });
+
+
+
+
+      //validation for Firstname
+      function check_fname() {
+
+        var pattern = /^[a-zA-Z]*$/;
+        var fname = $("#fname").val();
+        if (pattern.test(fname) && fname !== '') {
+          $("#fname_er").hide();
+          $("#fname").css("border-bottom", "2px solid green");
+          err_fname = false;
+        } else if (fname == '') {
+
+          $("#fname").css("border-bottom", "2px solid red");
+          err_fname = true;
+
         } else {
+          $("#fname_er").html("Name should contain only characters");
+          $("#fname_er").show('slow').delay(3000).hide('slow');
+          $("#fname").css("border-bottom", "2px solid red");
+          err_fname = true;
+        }
+
+      }
+
+      //validation for surname
+      function check_sname() {
+
+        var pattern = /^[a-zA-Z]*$/;
+        var sname = $("#sname").val();
+        if (pattern.test(sname) && sname !== '') {
+          $("#sname_er").hide();
+          $("#sname").css("border-bottom", "2px solid green");
+          err_sname = false;
+        } else if (sname == '') {
+
+          $("#sname").css("border-bottom", "2px solid red");
+          err_sname = true;
+
+        } else {
+          $("#sname_er").html("Surname should contain only characters");
+          $("#sname_er").show('slow').delay(3000).hide('slow');
+          $("#sname").css("border-bottom", "2px solid red")
+          err_sname = true;
+        }
+
+      }
+
+      //Validation for NIC
+      function check_nic() {
+
+        var pattern = /^[A-Z]\d{12}[A-Z]$/;
+        var nic = $("#nic").val();
+        if (pattern.test(nic) && nic !== '') {
+          $("#nic_er").hide();
+          $("#nic").css("border-bottom", "2px solid green");
+          err_nic = false;
+        } else if (nic == '') {
+
+          $("#nic").css("border-bottom", "2px solid red");
+          err_nic = true;
+
+        } else {
+          $("#nic_er").html("NIC should be in this format : R160597123456D");
+          $("#nic_er").show('slow').delay(3000).hide('slow');
+          $("#nic").css("border-bottom", "2px solid red")
+          err_nic = true;
+        }
+
+      }
+
+
+      //validation for Address
+      function check_addr() {
+
+        var pattern = /^[A-z]+\s[A-z]+/; // /^\s[A-z]+\s[A-z]/
+        var add = $("#add").val();
+        if (pattern.test(add) && add !== '') {
+          $("#add_er").hide();
+          $("#add").css("border-bottom", "2px solid green");
+          err_addr = false;
+        } else if (add == '') {
+          $("#add").css("border-bottom", "2px solid red");
+          err_addr = true;
+
+        } else {
+          $("#add_er").html("Address is required");
+          $("#add_er").show('slow').delay(3000).hide('slow');
+          $("#add").css("border-bottom", "2px solid red")
+          err_addr = true;
+        }
+
+      }
+
+
+      //validation for District
+      function check_dist() {
+
+
+        var dist = $('input[name=chose]:checked').val();
+
+
+        if (dist != null) {
+          $("#dist_er").hide();
+          $("#choose").css("border-bottom", "2px solid green");
+          err_dist = false;
+
+
+        } else {
+          $("#dist_er").html("A district should be selected");
+          $("#dist_er").show('slow').delay(3000).hide('slow');
+          $("#choose").css("border-bottom", "2px solid red")
+          err_dist = true;
+
+
+
+        }
+
+      }
+
+
+      //validation for email
+      function check_email() {
+
+        var pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        var email = $("#email").val();
+        if (pattern.test(email) && email !== '') {
+          $("#email_er").hide();
+          $("#email").css("border-bottom", "2px solid green");
+          err_addr = false;
+        } else if (email == '') {
+
+          $("#email").css("border-bottom", "2px solid red");
+          err_addr = true;
+        } else {
+          $("#email_er").html("Must be in this format : Dooshyant@gmail");
+          $("#email_er").show('slow').delay(3000).hide('slow');
+          $("#email").css("border-bottom", "2px solid red")
+          err_addr = true;
+        }
+
+      }
+
+
+      //validation for Password
+      function check_pass() {
+
+        var p_length = $("#pass").val().length;
+
+        if (p_length < 8) {
+          $("#pass_er").html("Atleast 8 characters");
+          $("#pass_er").show('slow').delay(3000).hide('slow');
+          $("#pass").css("border-bottom", "2px solid red")
+          err_pass = true;
+
+        } else if (pass == '') {
+
+          $("#pass").css("border-bottom", "2px solid red");
+          err_pass = true;
+        } else {
+          $("#pass_er").hide();
+          $("#pass").css("border-bottom", "2px solid green");
+          err_pass = false;
+        }
+
+      }
+
+      function check_cpass() {
+
+        var pass = $("#pass").val();
+        var cpass = $("#cpass").val();
+
+        if (pass !== cpass) {
+          $("#cpass_er").html("Password did not match");
+          $("#cpass_er").show('slow').delay(3000).hide('slow');
+          $("#cpass").css("border-bottom", "2px solid red")
+          err_cpass = true;
+
+        } else if (cpass == '') {
+
+          $("#cpass").css("border-bottom", "2px solid red");
+          err_cpass = true;
+        } else {
+          $("#cpass_er").hide();
+          $("#cpass").css("border-bottom", "2px solid green");
+          err_pass = false;
+        }
+
+      }
+
+      function pushtotable(x) {
+        var a = $("#fname").val();
+        var b = $("#sname").val();
+        var c = $("#nic").val();
+        var d = $("#add").val();
+        var e = $("#dist input[type='radio']:checked").val();
+        var f = $("#email").val();
+        var g = $("#cpass").val();
+        if (x == 2) {
           db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
           db.transaction(function(tx) {
-            tx.executeSql('UPDATE user SET district=? WHERE rowid=' + idz, [a]);
+            tx.executeSql('INSERT INTO user(name,surname,nic,district,password,address,email) VALUES (?,?,?,?,?,?,?)', [a, b, c, e, g, d, f]);
+            $.mobile.changePage("#login", {
+              reverse: false,
+              transition: "pop"
+            });
           })
-          $.mobile.changePage("#home", {
-            reverse: false,
-            transition: "pop"
-          });
         }
-      })
-      */
+      }
     }
 
     //Check Session
@@ -1229,7 +1541,8 @@
         $("#nowifi").show("fast");
         $("#buttongroup").hide("fast");
         $("#titl").hide("fast");
-      } else if ($("#policeview").is(":visible") || $("#fireview").is(":visible") || $("#hospitalview").is(":visible") || $("#busview").is(":visible") || $("#atmview").is(":visible") || $("#municipalityview").is(":visible") || $("#bankview").is(
+      } else if ($("#policeview").is(":visible") || $("#fireview").is(":visible") || $("#hospitalview").is(":visible") || $("#busview").is(":visible") || $("#atmview").is(":visible") || $("#municipalityview").is(":visible") || $("#bankview")
+        .is(
           ":visible") || $("#gasview").is(":visible")) {
         //do nothing
       } else {
