@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.vnk.complatinggeoloc" versionCode="10" version="5.6.5">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.vnk.complatinggeoloc" versionCode="10" version="5.6.6">
 
   <!-- versionCode is optional and Android only -->
 
-  <name>Complaint with Geolocation</name>
+  <name>Smart Complaint App With Geo-Location</name>
 
   <description>
     A simple complaint application with maps.
