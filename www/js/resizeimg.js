@@ -24,7 +24,7 @@ fileReader.onload = function(event) {
     document.getElementById("upload-Preview").src = canvas.toDataURL();
   }
   image.src = event.target.result;
-  alert(event.target.result);
+  //alert(event.target.result);
 };
 
 var loadImageFile = function() {
