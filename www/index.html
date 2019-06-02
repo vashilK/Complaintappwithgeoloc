@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Complaint App With Geo-Location</title>
+  <title>Smart Complaint App With Geo-Location</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
   <!-- FILES FOR LOGIN PAGE -->
@@ -918,7 +918,7 @@
       //ALLOWS execution of all functions
       db.transaction(function(tx) {
         //CREATE TABLE USER
-        tx.executeSql('DROP TABLE image');
+        //tx.executeSql('DROP TABLE image');
         tx.executeSql('CREATE TABLE IF NOT EXISTS user(name text,surname text, nic text, district text, password text, address text, email text)');
         tx.executeSql('CREATE TABLE IF NOT EXISTS image(img text,prob text, date text, status int, keyword text, loc text, userid int)');
       });
@@ -1069,7 +1069,7 @@
       //USED TO KNOW WHICH LI IS CLICKED AND DISPLAY CORRECT INFO
       $(document).on("tap", "#adding li", function() {
         var a = $(this).attr('alt');
-        alert(a);
+        //alert(a);
         lombo(a);
       });
 
@@ -1099,19 +1099,19 @@
       // Initialize the Image Classifier method with MobileNet
       const classifier = ml5.imageClassifier('MobileNet', modelLoaded);
       // When the model is loaded
-      function modelLoaded() {
-        alert('Model Loaded!');
+      async function modelLoaded() {
+        console.log('Model Loaded!');
       }
       async function compareimg() {
-        //await changeimg();
+        await modelLoaded();
         // Make a prediction with a selected image
         classifier.predict(document.getElementById('upload-Preview'), function(err, results) {
-          console.log(results);
-          console.log(err);
+          //console.log(results);
+          //console.log(err);
           res = results[0].className;
-          console.log(res);
+          //console.log(res);
           localStorage.setItem('searchres', res);
-          alert(res);
+          //alert(res);
           //decider(res);
           Pullfrom();
           $.mobile.changePage("#home", {
@@ -1257,9 +1257,7 @@
         });
 
         var wordsearch = localStorage.getItem('searchres');
-        alert(wordsearch);
         var word = wordsearch.split(",", 1);
-        alert(word[0]);
         const res = net.run(word[0]);
         //console.log("1. " + res);
         if ((res == 0) || (res != 1)) {
@@ -1297,11 +1295,11 @@
       function sendornot() {
         var tellme;
         if (allowed > 0) {
-          alert('ALLOWED');
+          //alert('ALLOWED');
           tellme = 1;
           sendmail();
         } else {
-          alert('NOT ALLOWED');
+          //alert('NOT ALLOWED');
           tellme = 0;
         }
         var gettext = $("#problem input[type=radio]:checked").val();
@@ -1334,7 +1332,7 @@
         } else if ((lat <= -20.363229) && (lat >= -20.518343)) {
           mailadd = "vashilnakey@gmail.com";
         }
-        alert(img);
+        //alert(img);
         cordova.plugins.email.open({
           app: 'gmail',
           to: mailadd,
@@ -1680,7 +1678,7 @@
         $("#titl").hide("fast");
 
       } else if ($("#policeview" || "#postview" || "#fireview" || "#hospitalview" || "#busview" || "#atmview" || "#municipalityview" || "#bankview" || "#gasview").is(":visible")) {
-        alert("yaaaay");
+        //alert("yaaaay");
       } else {
         $("#nowifi").hide("fast");
         $("#buttongroup").show("fast");
