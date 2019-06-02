@@ -33,12 +33,12 @@
   <script src="leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
   <!-- CUSTOM JS -->
   <script src="js/home.js"></script>
-  <!-- REGISTER FORM VALIDATION JS -->
-
   <!-- IMAGE RECOGNITION -->
   <script src="https://unpkg.com/ml5@0.1.3/dist/ml5.min.js"></script>
   <!-- RESIZE IMAGE -->
   <script src="js/resizeimg.js"></script>
+  <!-- NEURAL NETWORK -->
+  <script src="https://cdn.rawgit.com/BrainJS/brain.js/master/browser.js"></script>
   <style>
     @font-face {
       font-family: "AB";
@@ -526,7 +526,7 @@
           <form onsubmit="event.preventDefault();">
             <input id="01" name="un" type="email" placeholder="email" />
             <input id="02" name="pw" type="password" placeholder="password" />
-            <a id="zo" class="ui-btn ui-corner-all">Submit</a>
+            <a id="zo" class="ui-btn ui-corner-all">LOG IN</a>
           </form>
         </div>
 
@@ -723,7 +723,7 @@
               <label for="combox" class="inputtext">Details:</label>
               <textarea id="combox" type="textarea" rows="10" onclick="loadImageFile();" required></textarea>
               <button id="complaintsub" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored tappend">Submit</button>
-              <br><br><br>
+              <br>
               <div id="size"></div>
             </div>
       </div>
@@ -918,9 +918,9 @@
       //ALLOWS execution of all functions
       db.transaction(function(tx) {
         //CREATE TABLE USER
-        //tx.executeSql('DROP TABLE image');
+        tx.executeSql('DROP TABLE image');
         tx.executeSql('CREATE TABLE IF NOT EXISTS user(name text,surname text, nic text, district text, password text, address text, email text)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS image(img text,prob text, date text, status text, keyword text, loc text, userid int)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS image(img text,prob text, date text, status int, keyword text, loc text, userid int)');
       });
 
       //MAINTAIN USER SESSION
@@ -1033,7 +1033,7 @@
       $("#proflogout").tap(function() {
         localStorage.removeItem('usn');
         $("#01").val("");
-        $("02").val("");
+        $("#02").val("");
         $.mobile.changePage("#login", {
           reverse: false,
           transition: "pop"
@@ -1041,7 +1041,7 @@
       });
 
       //Append TABLE
-      $(".tappend").click(function() {
+      $(".tappend").tap(function() {
         var ids = localStorage.getItem('ids');
         db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
         db.transaction(function(tx) {
@@ -1080,7 +1080,12 @@
             $("#ptitle").html(result.rows[0].keyword);
             $("#ploc").html(result.rows[0].loc);
             $("#pdate").html(result.rows[0].date);
-            $("#pstat").html(result.rows[0].status);
+            let xo = result.rows[0].status;
+            if (xo == 0) {
+              $("#pstat").html("Rejected");
+            } else if (xo == 1) {
+              $("#pstat").html("Approved");
+            }
             $("#reducesize").attr('src', result.rows[0].img);
           });
         })
@@ -1105,9 +1110,10 @@
           console.log(err);
           res = results[0].className;
           console.log(res);
+          localStorage.setItem('searchres', res);
           alert(res);
-          decider(res);
-          sendornot();
+          //decider(res);
+          Pullfrom();
           $.mobile.changePage("#home", {
             reverse: false,
             transition: "pop"
@@ -1121,37 +1127,182 @@
         allowed = 0;
       });
 
-      function decider(x) {
-        if (x.includes('Laptop') || x.includes('laptop')) {
-          allowed++;
-        } else if (x.includes('pc') || x.includes('Pc')) {
-          allowed++;
-        } else if (x.includes('dog') || x.includes('Dog')) {
-          allowed++;
-        } else if (x.includes('sea') || x.includes('Sea')) {
-          allowed++;
-        } else if (x.includes('Food') || x.includes('food')) {
-          allowed++;
-        } else if (x.includes('animal') || x.includes('Animal')) {
-          allowed++;
-        } else if (x.includes('phone') || x.includes('Phone')) {
-          allowed++;
-        } else if (x.includes('boy') || x.includes('girl')) {
-          allowed++;
-        } else if (x.includes('Boy') || x.includes('Girl')) {
-          allowed++;
-        }
+      // Ai NEURAL NETWORK DECISION
+      function Pullfrom() {
+        db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
+        db.transaction(function(tx) {
+          tx.executeSql('SELECT * FROM image WHERE status<=1', [], function(tx, result) {
+            var keyword = [];
+            var status = [];
+            if (result.rows.length > 0) {
+              for (let i = 0; i < result.rows.length; i++) {
+                keyword[i] = result.rows[i].keyword;
+                status[i] = result.rows[i].status;
+                if (i == (result.rows.length - 1)) {
+                  Aidecision(result, keyword, status);
+                }
+              }
+            } else {
+              Aidecision(null, null);
+            }
+          });
+        })
       }
 
+      function Aidecision(y, z) {
+        const trainingData = [{
+            input: 'laptop',
+            output: [0]
+          },
+          {
+            input: 'flower',
+            output: [1]
+          },
+          {
+            input: 'lamppost',
+            output: [1]
+          },
+          {
+            input: 'road',
+            output: [1]
+          },
+          {
+            input: 'wire',
+            output: [1]
+          },
+          {
+            input: 'pipe',
+            output: [1]
+          },
+          {
+            input: 'tube',
+            output: [1]
+          },
+          {
+            input: 'cellular telephone',
+            output: [1]
+          },
+
+          {
+            input: 'cellular phone',
+            output: [1]
+          },
+          {
+            input: 'cellular telephone,cellular phone',
+            output: [1]
+          },
+          {
+            input: 'cell',
+            output: [1]
+          },
+          {
+            input: 'mobile phone',
+            output: [1]
+          },
+          {
+            input: 'smartphone',
+            output: [1]
+          },
+          {
+            input: 'bicycle',
+            output: [0]
+          },
+          {
+            input: 'car',
+            output: [0]
+          },
+          {
+            input: 'truck',
+            output: [0]
+          },
+          {
+            input: 'bike',
+            output: [0]
+          },
+          {
+            input: 'paper',
+            output: [0]
+          },
+          {
+            input: 'pc',
+            output: [0]
+          },
+          {
+            input: 'computer',
+            output: [0]
+          },
+          {
+            input: 'table',
+            output: [0]
+          },
+          {
+            input: 'chair',
+            output: [0]
+          }
+        ];
+
+        const net = new brain.recurrent.LSTM();
+        if (y != null) {
+          for (let i = 0; i < y.length; i++) {
+            trainingData.push({
+              input: y[i],
+              output: [z[i]]
+            });
+          }
+        }
+
+        net.train(trainingData, {
+          iterations: 100,
+          errorThresh: 0.011
+        });
+
+        var wordsearch = localStorage.getItem('searchres');
+        alert(wordsearch);
+        var word = wordsearch.split(",", 1);
+        alert(word[0]);
+        const res = net.run(word[0]);
+        //console.log("1. " + res);
+        if ((res == 0) || (res != 1)) {
+          allowed = 0;
+          //console.log('Reject');
+          sendornot();
+        } else {
+          allowed++;
+          //console.log('Accept');
+          sendornot();
+
+        }
+      }
+      /*
+            function decider(x) {
+              if (x.includes('Laptop') || x.includes('laptop')) {
+                allowed++;
+              } else if (x.includes('pc') || x.includes('Pc')) {
+                allowed++;
+              } else if (x.includes('pipe') || x.includes('Pipe')) {
+                allowed++
+              } else if (x.includes('tree') || x.includes('Tree')) {
+                allowed++
+              } else if (x.includes('yard') || x.includes('Yard')) {
+                allowed++
+              } else if (x.includes('road') || x.includes('Road')) {
+                allowed++
+              } else if (x.includes('lamppost') || x.includes('Lamppost')) {
+                allowed++
+              } else if (x.includes('plants') || x.includes('Plants')) {
+                allowed++
+              }
+            }
+      */
       function sendornot() {
         var tellme;
         if (allowed > 0) {
-          alert('NOT ALLOWED');
-          tellme = "Rejected"
-        } else {
           alert('ALLOWED');
-          tellme = "Approved"
+          tellme = 1;
           sendmail();
+        } else {
+          alert('NOT ALLOWED');
+          tellme = 0;
         }
         var gettext = $("#problem input[type=radio]:checked").val();
 
@@ -1166,7 +1317,8 @@
       function sendmail() {
         let lat = localStorage.getItem('lat');
         let lon = localStorage.getItem('longitude');
-        let problem = $("#combox").val();
+        let prob = $("#combox").val();
+        let probelm = prob + " At longitude: " + lon + " & latitude: " + lat;
         let img = $("#imgspace").attr('src');
         alert(img);
         let idz = localStorage.getItem('ids');
@@ -1210,7 +1362,7 @@
           });
           $("#profmail").val("");
           $("#confprofmail").val("");
-        } else{
+        } else {
           alert("Invalid");
         }
       })
@@ -1553,9 +1705,10 @@
       }
 
     }, 800);
-    //SWIPES
+
+    //==========================SWIPES============================//
     $("#home").on("swipeleft", homemoveleft);
-    //$("#camera").on("swiperight", cameramoveright);
+    $("#profile").on("swiperight", moveright);
 
     function homemoveleft() {
       if ($("#buttongroup").is(":visible")) {
@@ -1569,13 +1722,23 @@
       }
     }
 
-    function cameramoveright() {
-      $.mobile.changePage("#home", {
+    function moveright() {
+      $.mobile.changePage("#camera", {
         reverse: false,
         transition: "slide"
       });
+      clickpic();
+      reportmap();
+      filltext();
     }
-
+    /*
+        function cameramoveright() {
+          $.mobile.changePage("#home", {
+            reverse: false,
+            transition: "slide"
+          });
+        }
+    */
     var imageloc;
     //CAMERA FUNCTIONALITY
     $(document).ready(function() {
@@ -1670,7 +1833,7 @@
           'contributors,<a href="https://creativecommons.org/licenses' +
           '/by-sa/2.0/">CC-BY-SA</a>,Imagery © <a href="https://' +
           'www.mapbox.com/">Mapbox</a>',
-        id: 'mapbox.satellite',
+        id: 'mapbox.streets',
         accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYyc' +
           'XBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
       }).addTo(mymap);
