@@ -1318,9 +1318,8 @@
         let lat = localStorage.getItem('lat');
         let lon = localStorage.getItem('longitude');
         let prob = $("#combox").val();
-        let probelm = prob + " At longitude: " + lon + " & latitude: " + lat;
+        let problem = prob + " At longitude: " + lon + " & latitude: " + lat;
         let img = $("#imgspace").attr('src');
-        alert(img);
         let idz = localStorage.getItem('ids');
         let gettext = $("#problem input[type=radio]:checked").val();;
         let probtitle = 'Complaint about ' + gettext + ' issue'
@@ -1335,6 +1334,7 @@
         } else if ((lat <= -20.363229) && (lat >= -20.518343)) {
           mailadd = "vashilnakey@gmail.com";
         }
+        alert(img);
         cordova.plugins.email.open({
           app: 'gmail',
           to: mailadd,
@@ -1762,8 +1762,6 @@
       });
     }
 
-    function justdoit() {}
-
     function camsuccess(imageURI) {
       var img = $("#camimg");
       img.src = imageURI;
@@ -1783,7 +1781,7 @@
         var dt = dd + "/" + mm + "/" + yyyy; //date
         var e = $("#problem input[type='radio']:checked").val(); //problem
         var userid = localStorage.getItem('ids');
-        tx.executeSql('INSERT INTO image(img,prob,date,status,keyword,loc,userid) VALUES (?,?,?,?,?,?,?)', [imageloc, e, dt, "pending", "none", "undefined", userid]);
+        tx.executeSql('INSERT INTO image(img,prob,date,status,keyword,loc,userid) VALUES (?,?,?,?,?,?,?)', [imageloc, e, dt, 3, "none", "undefined", userid]);
       })
       $("#original-Img").attr('src', imageloc);
 
