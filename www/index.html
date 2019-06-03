@@ -742,7 +742,7 @@
               <label for="combox" class="inputtext">Details:</label>
               <textarea id="combox" type="textarea" rows="10" onclick="loadImageFile();" required></textarea>
               <button id="complaintsub" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored tappend">Submit</button>
-              <br><br><br>
+              <br><br>
               <div id="size"></div>
             </div>
       </div>
@@ -1419,14 +1419,14 @@
 
 
 
-      var err_fname = false;
-      var err_sname = false;
-      var err_nic = false;
-      var err_addr = false;
-      var err_dist = false;
-      var err_email = false;
-      var err_pass = false;
-      var err_cpass = false;
+      var err_fname = true;
+      var err_sname = true;
+      var err_nic = true;
+      var err_addr = true;
+      var err_dist = true;
+      var err_email = true;
+      var err_pass = true;
+      var err_cpass = true;
 
 
       $("#fname").focusout(function() {
@@ -1591,7 +1591,6 @@
           $("#email").css("border-bottom", "2px solid green");
           err_addr = false;
         } else if (email == '') {
-
           $("#email").css("border-bottom", "2px solid red");
           err_addr = true;
         } else {
@@ -1615,7 +1614,7 @@
           $("#pass").css("border-bottom", "2px solid red")
           err_pass = true;
 
-        } else if (pass == '') {
+        } else if (p_length == '') {
           $("#pass").css("border-bottom", "2px solid red");
           err_pass = true;
         } else {
@@ -1631,7 +1630,7 @@
         var pass = $("#pass").val();
         var cpass = $("#cpass").val();
 
-        if (pass !== cpass) {
+        if (pass != cpass) {
           $("#cpass_er").html("Password did not match");
           $("#cpass_er").show('slow').delay(3000).hide('slow');
           $("#cpass").css("border-bottom", "2px solid red")
