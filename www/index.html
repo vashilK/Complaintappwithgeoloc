@@ -983,6 +983,13 @@
             }
             pushtotable(keeptrack);
             keeptrack = 0;
+            $("#fname").val("");
+            $("#sname").val("");
+            $("#nic").val("");
+            $("#add").val("");
+            $("#email").val("");
+            $("#cpass").val("");
+            $("#dist input[type='radio']").attr('checked', false);
           })
         });
       }
@@ -1014,17 +1021,19 @@
                 //Add name to profile
                 $("#profuser").html(name);
               }
+              if (i == (result.rows.length - 1)) {
+                //allow login or not
+                if (counter > 0) {
+                  $.mobile.changePage("#home", {
+                    reverse: false,
+                    transition: "pop"
+                  });
+                } else {
+                  alert("INVALID");
+                }
+                counter = 0;
+              }
             }
-            //allow login or not
-            if (counter > 0) {
-              $.mobile.changePage("#home", {
-                reverse: false,
-                transition: "pop"
-              });
-            } else {
-              alert("INVALID");
-            }
-            counter = 0;
           })
         });
       }
