@@ -329,6 +329,25 @@
       animation: spin 2s linear infinite;
     }
 
+    #loader1 {
+      display: none;
+      position: absolute;
+      left: 60%;
+      top: 50%;
+      z-index: 1;
+      text-align: center;
+      width: 150px;
+      height: 150px;
+      margin: -75px 0 0 -75px;
+      border: 6px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 6px solid #3498db;
+      width: 40px;
+      height: 40px;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+    }
+
     @-webkit-keyframes spin {
       0% {
         -webkit-transform: rotate(0deg);
@@ -728,7 +747,7 @@
             </div>
       </div>
       <div id="camimg"></div>
-
+      <div id="loader1"></div>
     </div>
     <!-- CAMERA footer -->
     <div data-role="footer">
@@ -1047,7 +1066,7 @@
         var ids = localStorage.getItem('ids');
         db = openDatabase("ComplaintApp", "1.0", "Database for Ai", 2 * 1024 * 1024);
         db.transaction(function(tx) {
-          tx.executeSql('SELECT * FROM image WHERE userid=1', [], function(tx, result) {
+          tx.executeSql('SELECT * FROM image WHERE userid=' + ids, [], function(tx, result) {
             var contentimg = [];
             var contenttitle = [];
             let a = result.rows.length;
@@ -1870,6 +1889,7 @@
       } else {
         $("#loader").hide("fast");
       }
+
     }, 800);
     //ON LEAVING MAPS
     $("#home").on("pagebeforehide", function() {
@@ -1883,7 +1903,13 @@
       $("#gasview").hide();
       $("#temp").hide();
       $("#buttongroup").show();
+      $("#loader").hide("fast");
     });
+
+    //Loader for AI Phase
+    $("#camera").on("pagebeforehide", function() {
+      $("#loader").show("fast");
+    })
   </script>
 </body>
 
