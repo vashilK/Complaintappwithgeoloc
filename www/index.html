@@ -1419,14 +1419,14 @@
 
 
 
-      var err_fname = true;
-      var err_sname = true;
-      var err_nic = true;
-      var err_addr = true;
-      var err_dist = true;
-      var err_email = true;
-      var err_pass = true;
-      var err_cpass = true;
+      var err_fname;
+      var err_sname;
+      var err_nic;
+      var err_addr;
+      var err_dist;
+      var err_email;
+      var err_pass;
+      var err_cpass;
 
 
       $("#fname").focusout(function() {
@@ -1513,7 +1513,7 @@
 
         var pattern = /^[A-Z]\d{12}[A-Z]$/;
         var nic = $("#nic").val();
-        if (pattern.test(nic) && nic !== '') {
+        if (pattern.test(nic) && nic != '') {
           $("#nic_er").hide();
           $("#nic").css("border-bottom", "2px solid green");
           err_nic = false;
