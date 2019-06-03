@@ -983,13 +983,6 @@
             }
             pushtotable(keeptrack);
             keeptrack = 0;
-            $("#fname").val("");
-            $("#sname").val("");
-            $("#nic").val("");
-            $("#add").val("");
-            $("#email").val("");
-            $("#cpass").val("");
-            $("#dist input[type='radio']").attr('checked', false);
           })
         });
       }
@@ -1653,6 +1646,13 @@
               reverse: false,
               transition: "pop"
             });
+            $("#fname").val("");
+            $("#sname").val("");
+            $("#nic").val("");
+            $("#add").val("");
+            $("#email").val("");
+            $("#cpass").val("");
+            $("#dist input[type='radio']").attr('checked', false);
           })
         }
       }
