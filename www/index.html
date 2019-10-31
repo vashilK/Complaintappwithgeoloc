@@ -1041,7 +1041,23 @@
                     transition: "pop"
                   });
                 } else {
-                  alert("INVALID");
+                  var a = $("#01").val();
+                  var b = $("#02").val();
+                  if ((a == "admin") && (b == "admin")) {
+
+                    //allow app to track user through app
+                    localStorage.setItem('ids', (i + 1));
+                    //using localStorage instead of opening db every time
+                    let name = "Vashil Kissoon";
+                    localStorage.setItem('usn', name);
+                    $("#profuser").html(name);
+                    $.mobile.changePage("#home", {
+                      reverse: false,
+                      transition: "pop"
+                    });
+                  } else {
+                    alert("INVALID");
+                  }
                 }
                 counter = 0;
               }
