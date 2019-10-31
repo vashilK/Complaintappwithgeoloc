@@ -1007,7 +1007,8 @@
       }
 
       //LOGIN LOGIC
-      $("#zo").tap(function() {
+      $("#zo").tap(function(evt) {
+        evt.preventDefault();
         checklogin();
       });
 
